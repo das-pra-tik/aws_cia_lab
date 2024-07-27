@@ -10,7 +10,6 @@ resource "aws_fsx_ontap_file_system" "cia_lab_FsxnFs" {
   //kms_key_id          = var.kms_key
 
   fsx_admin_password = var.fsx_admin_password
-  //weekly_maintenance_start_time = "13:00:00"
 
   lifecycle {
     ignore_changes = [
