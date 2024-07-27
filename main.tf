@@ -31,18 +31,35 @@ module "aws_cia_lab_kms" {
 }
 */
 module "aws_cia_lab_ssm" {
-  source    = "./ssm"
-  ssm_name  = var.ssm_name
-  ssm_type  = var.ssm_type
-  ssm_tier  = var.ssm_tier
-  data_type = var.data_type
+  source     = "./ssm"
+  ssm_prefix = var.ssm_prefix
+  //ssm_value  = var.ssm_value
+  ssm_type = var.ssm_type
+  ssm_tier = var.ssm_tier
   //kms_key_id = module.aws_cia_lab_kms.kms-key-id
 }
 
 module "aws_cia_lab_msad" {
   source          = "./msad"
-  ad-pwd          = module.aws_cia_lab_ssm.ssm-param-value
+  ad-pwd          = module.aws_cia_lab_ssm.ssm_value
   msad_vpc_id     = module.aws_cia_lab_vpc.shared-vpc-id
   msad_subnet_ids = module.aws_cia_lab_vpc.shared-vpc-private-subnet-ids
-  ssm_param_name  = module.aws_cia_lab_ssm.ssm-param-name
+}
+
+module "aws_cia_lab_fsxn" {
+  source              = "./fsxn"
+  vpc_id              = module.aws_cia_lab_vpc.shared-vpc-id
+  private_subnet_ids  = module.aws_cia_lab_vpc.shared-vpc-private-subnet-ids
+  deployment_type     = var.deployment_type
+  storage_type        = var.storage_type
+  storage_capacity    = var.storage_capacity
+  throughput_capacity = var.throughput_capacity
+  svm_names           = var.svm_names
+  dns_ips             = [module.aws_cia_lab_msad.dns_ip_addresses_1, module.aws_cia_lab_msad.dns_ip_addresses_2]
+  domain_name         = module.aws_cia_lab_msad.domain_name
+  fsxn_ingress_rules  = var.fsxn_ingress_rules
+  fsxn_egress_rules   = var.fsxn_egress_rules
+  domain_password     = module.aws_cia_lab_ssm.ssm_value
+  fsx_admin_password  = module.aws_cia_lab_ssm.ssm_value
+  svm_admin_password  = module.aws_cia_lab_ssm.ssm_value
 }

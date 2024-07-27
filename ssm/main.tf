@@ -1,18 +1,50 @@
-#Create a random generated password to use in Secrets
+# Create a random generated password to use in Secrets
 resource "random_password" "random_secrets" {
-  length           = 16
-  special          = true
-  min_special      = 5
-  override_special = "!#$%^&*()-_=+[]{}<>:?"
+  //count            = length(var.ssm_prefix)
+  length      = 20
+  special     = true
+  min_special = 5
+  //override_special = "!#$%^&*()-_=+[]{}<>:?"
+  lower = true
+  upper = true
 }
 
+locals {
+  ssm_secrets = {
+    domain_secrets = {
+      name        = var.ssm_prefix[0]
+      type        = var.ssm_type
+      description = "Domain Authentication Password Secrets"
+      //key_id      = var.kms_key_id
+      overwrite = false
+      tier      = var.ssm_tier
+    }
+    fsxn_secrets = {
+      name        = var.ssm_prefix[1]
+      type        = var.ssm_type
+      description = "fsxn Password Secrets"
+      //key_id      = var.kms_key_id
+      overwrite = false
+      tier      = var.ssm_tier
+    }
+    svm_secrets = {
+      name        = var.ssm_prefix[2]
+      type        = var.ssm_type
+      description = "svm Password Secrets"
+      //key_id      = var.kms_key_id
+      overwrite = false
+      tier      = var.ssm_tier
+    }
+  }
+}
 resource "aws_ssm_parameter" "cia_lab_secret" {
-  name      = var.ssm_name
-  type      = var.ssm_type
-  value     = random_password.random_secrets.result
-  //key_id    = var.kms_key_id
-  tier      = var.ssm_tier
-  data_type = var.data_type
+  for_each    = local.ssm_secrets
+  description = each.value.description
+  name        = each.value.name
+  value       = random_password.random_secrets.result
+  type        = each.value.type
+  tier        = each.value.tier
+  //key_id    = each.value.key_id
   tags = {
     Name = "ssm_param_store_cia_lab"
   }

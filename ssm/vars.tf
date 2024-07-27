@@ -1,9 +1,10 @@
-################################################################################
-# SSM Parameter
-################################################################################
-variable "ssm_name" {
-  description = "Name of SSM parameter"
-  type        = string
+/*
+variable "kms_key_id" {
+  type = string
+}
+*/
+variable "ssm_prefix" {
+  type = list(string)
 }
 
 variable "ssm_type" {
@@ -16,12 +17,5 @@ variable "ssm_tier" {
   type        = string
 }
 
-variable "data_type" {
-  description = "Data type of the parameter. Valid values: text, aws:ssm:integration and aws:ec2:image for AMI format."
-  type        = string
-}
-/*
-variable "kms_key_id" {
-  type = string
-}
-*/
+
+

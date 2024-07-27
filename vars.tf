@@ -86,24 +86,221 @@ variable "kms_alias_name" {
 }
 
 #-------------------------------------------------------------------------
-variable "ssm_name" {
-  type    = string
-  default = "/production/aws_cia_lab/secret"
+variable "ssm_prefix" {
+  type    = list(string)
+  default = ["/prod/aws_cia_lab/domain_secret", "/prod/aws_cia_lab/fsxn_secret", "/prod/aws_cia_lab/svm_secret"]
 }
 
 variable "ssm_type" {
   type    = string
-  default = "SecureString"
+  default = "String"
 }
 
 variable "ssm_tier" {
   type    = string
   default = "Standard"
 }
-
-variable "data_type" {
+#-------------------------------------------------------------------------
+variable "deployment_type" {
   type    = string
-  default = "text"
+  default = "MULTI_AZ_1"
 }
 
-#-------------------------------------------------------------------------
+variable "storage_type" {
+  type    = string
+  default = "SSD"
+}
+
+variable "storage_capacity" {
+  type    = number
+  default = 1024
+}
+
+variable "throughput_capacity" {
+  type    = number
+  default = 512
+}
+
+variable "svm_names" {
+  type    = list(string)
+  default = ["shared-vpc-svm1", "shared-vpc-svm2"]
+}
+variable "fsxn_ingress_rules" {
+  type = map(any)
+  default = {
+    "-1" = {
+      description = "All ICMP"
+      from_port   = "-1"
+      to_port     = "-1"
+      protocol    = "icmp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "443" = {
+      description = "HTTPS - Access from the Connector to fsxadmin management LIF to send API calls to FSx"
+      from_port   = "443"
+      to_port     = "443"
+      protocol    = "tcp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "22" = {
+      description = "SSH access to the IP address of the cluster management LIF or a node management LIF"
+      from_port   = "22"
+      to_port     = "22"
+      protocol    = "tcp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "111" = {
+      description = "Remote procedure call for NFS"
+      from_port   = "111"
+      to_port     = "111"
+      protocol    = "tcp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "139" = {
+      description = "NetBIOS service session for CIFS"
+      from_port   = "139"
+      to_port     = "139"
+      protocol    = "tcp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "161" = {
+      description = "Simple network management protocol"
+      from_port   = "161"
+      to_port     = "162"
+      protocol    = "tcp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "445" = {
+      description = "Microsoft SMB/CIFS over TCP with NetBIOS framing"
+      from_port   = "445"
+      to_port     = "445"
+      protocol    = "tcp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "635" = {
+      description = "NFS mount"
+      from_port   = "635"
+      to_port     = "635"
+      protocol    = "tcp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "749" = {
+      description = "Kerberos"
+      from_port   = "749"
+      to_port     = "749"
+      protocol    = "tcp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "2049" = {
+      description = "NFS server daemon"
+      from_port   = "2049"
+      to_port     = "2049"
+      protocol    = "tcp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "3260" = {
+      description = "iSCSI access through the iSCSI data LIF"
+      from_port   = "3260"
+      to_port     = "3260"
+      protocol    = "tcp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "4045" = {
+      description = "NFS lock daemon"
+      from_port   = "4045"
+      to_port     = "4045"
+      protocol    = "tcp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "4046" = {
+      description = "Network status monitor for NFS"
+      from_port   = "4046"
+      to_port     = "4046"
+      protocol    = "tcp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "10000" = {
+      description = "Backup using NDMP"
+      from_port   = "10000"
+      to_port     = "10000"
+      protocol    = "tcp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "11104" = {
+      description = "Management of intercluster communication sessions for SnapMirror"
+      from_port   = "11104"
+      to_port     = "11104"
+      protocol    = "tcp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "11105" = {
+      description = "SnapMirror data transfer using intercluster LIFs"
+      from_port   = "11105"
+      to_port     = "11105"
+      protocol    = "tcp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "111" = {
+      description = "Remote procedure call for NFS"
+      from_port   = "111"
+      to_port     = "111"
+      protocol    = "udp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "161" = {
+      description = "Simple network management protocol"
+      from_port   = "161"
+      to_port     = "162"
+      protocol    = "udp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "635" = {
+      description = "NFS mount"
+      from_port   = "635"
+      to_port     = "635"
+      protocol    = "udp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "2049" = {
+      description = "NFS server daemon"
+      from_port   = "2049"
+      to_port     = "2049"
+      protocol    = "udp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "4045" = {
+      description = "NFS lock daemon"
+      from_port   = "4045"
+      to_port     = "4045"
+      protocol    = "udp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "4046" = {
+      description = "Network status monitor for NFS"
+      from_port   = "4046"
+      to_port     = "4046"
+      protocol    = "udp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+    "4049" = {
+      description = "NFS rquotad protocol"
+      from_port   = "4049"
+      to_port     = "4049"
+      protocol    = "udp"
+      cidrs       = ["10.0.0.0/8"]
+    }
+  }
+}
+
+variable "fsxn_egress_rules" {
+  type = map(any)
+  default = {
+    "-1" = {
+      description = "All Outbound"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidrs       = ["0.0.0.0/0"]
+    }
+  }
+}

@@ -35,8 +35,8 @@ resource "aws_iam_role" "ad_autojoin" {
     "Statement" = [
       {
         "Effect" = "Allow",
-        "Principal" = {
-          "Service" = "ec2.amazonaws.com"
+        "Principal" : {
+          "AWS" : ["*"]
         },
         "Action" = "sts:AssumeRole"
       }
@@ -44,13 +44,11 @@ resource "aws_iam_role" "ad_autojoin" {
   })
 }
 
-# required it seems
 resource "aws_iam_role_policy_attachment" "ssm-instance" {
   role       = aws_iam_role.ad_autojoin.id
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-# required it seems
 resource "aws_iam_role_policy_attachment" "ssm-ad" {
   role       = aws_iam_role.ad_autojoin.id
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMDirectoryServiceAccess"
