@@ -41,11 +41,11 @@ resource "aws_fsx_ontap_storage_virtual_machine" "FsxnSvm" {
   }
 }
 
-resource "aws_fsx_ontap_volume" "test" {
+resource "aws_fsx_ontap_volume" "Fsxn_Vol" {
   depends_on                 = [aws_fsx_ontap_file_system.cia_lab_FsxnFs, aws_fsx_ontap_storage_virtual_machine.FsxnSvm]
   count                      = length(var.svm_names)
-  name                       = "test"
-  junction_path              = "/test"
+  name                       = "cia_lab"
+  junction_path              = "/cia_lab"
   size_in_megabytes          = 1024
   storage_efficiency_enabled = true
   storage_virtual_machine_id = aws_fsx_ontap_storage_virtual_machine.FsxnSvm[count.index].id

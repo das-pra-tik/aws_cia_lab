@@ -4,7 +4,7 @@ variable "aws_profile" {
 }
 variable "aws_region" {
   type    = string
-  default = "us-east-2"
+  default = "us-east-1"
 }
 variable "aws_account_id" {
   type    = string
@@ -17,12 +17,12 @@ variable "shared-vpc-subnets" {
     a = {
       shared-vpc-public  = "10.40.1.0/24"
       shared-vpc-private = "10.40.101.0/24"
-      shared-vpc-az      = "us-east-2a"
+      shared-vpc-az      = "us-east-1a"
     }
     b = {
       shared-vpc-public  = "10.40.2.0/24"
       shared-vpc-private = "10.40.102.0/24"
-      shared-vpc-az      = "us-east-2b"
+      shared-vpc-az      = "us-east-1b"
     }
     # c = {
     #   shared-vpc-public  = "10.40.3.0/24"
@@ -37,12 +37,12 @@ variable "lamp-app-subnets" {
     a = {
       lamp-app-public  = "10.20.1.0/24"
       lamp-app-private = "10.20.101.0/24"
-      lamp-app-az      = "us-east-2a"
+      lamp-app-az      = "us-east-1a"
     }
     b = {
       lamp-app-public  = "10.20.2.0/24"
       lamp-app-private = "10.20.102.0/24"
-      lamp-app-az      = "us-east-2b"
+      lamp-app-az      = "us-east-1b"
     }
     # c = {
     #   lamp-app-public  = "10.20.3.0/24"
@@ -93,7 +93,7 @@ variable "ssm_prefix" {
 
 variable "ssm_type" {
   type    = string
-  default = "String"
+  default = "SecureString"
 }
 
 variable "ssm_tier" {
@@ -291,7 +291,6 @@ variable "fsxn_ingress_rules" {
     }
   }
 }
-
 variable "fsxn_egress_rules" {
   type = map(any)
   default = {
@@ -303,4 +302,19 @@ variable "fsxn_egress_rules" {
       cidrs       = ["0.0.0.0/0"]
     }
   }
+}
+#----------------------------------------------------------------------------------
+variable "s3_bucket_name" {
+  type    = string
+  default = "www.devops-terraform.click"
+}
+
+variable "domain_name" {
+  type    = string
+  default = "devops-terraform.click"
+}
+
+variable "alt_domain_name" {
+  type    = string
+  default = "www.devops-terraform.click"
 }

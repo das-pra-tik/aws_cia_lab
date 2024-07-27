@@ -63,3 +63,24 @@ module "aws_cia_lab_fsxn" {
   fsx_admin_password  = module.aws_cia_lab_ssm.ssm_value
   svm_admin_password  = module.aws_cia_lab_ssm.ssm_value
 }
+
+module "aws_cia_lab_s3_website" {
+  source         = "./s3_website"
+  s3_bucket_name = var.s3_bucket_name
+  cdn_arn        = module.aws_cia_lab_cdn.cdn_arn
+}
+
+module "aws_cia_lab_cdn" {
+  source          = "./cdn"
+  alt_domain_name = var.alt_domain_name
+  domain_name     = module.aws_cia_lab_s3_website.s3_bucket_regional_domain_name
+  acm_cert_arn    = module.aws_cia_lab_acm_r53.acm_certificate_arn
+}
+
+module "aws_cia_lab_acm_r53" {
+  source                 = "./acm_r53"
+  domain_name            = var.domain_name
+  alt_domain_name        = var.alt_domain_name
+  r53_cdn_hosted_zone_id = module.aws_cia_lab_cdn.cdn_hosted_zone_id
+  r53_cdn_domain_name    = module.aws_cia_lab_cdn.cdn_domain_name
+}
