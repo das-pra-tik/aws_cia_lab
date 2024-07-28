@@ -20,7 +20,7 @@ module "aws_cia_lab_tgw" {
   //lamp-app-vpc-public-subnet-ids  = module.aws_cia_vpc.lamp-app-vpc-public-subnet-ids
   //shared-vpc-public-subnet-ids    = module.aws_cia_vpc.shared-vpc-public-subnet-ids
 }
-/*
+
 module "aws_cia_lab_kms" {
   source              = "./kms"
   kms_alias_name      = var.kms_alias_name
@@ -29,14 +29,14 @@ module "aws_cia_lab_kms" {
   kms_deletion_window = var.kms_deletion_window
   key_spec            = var.key_spec
 }
-*/
+
 module "aws_cia_lab_ssm" {
   source     = "./ssm"
   ssm_prefix = var.ssm_prefix
   //ssm_value  = var.ssm_value
-  ssm_type = var.ssm_type
-  ssm_tier = var.ssm_tier
-  //kms_key_id = module.aws_cia_lab_kms.kms-key-id
+  ssm_type   = var.ssm_type
+  ssm_tier   = var.ssm_tier
+  kms_key_id = module.aws_cia_lab_kms.kms-key-id
 }
 
 module "aws_cia_lab_msad" {
@@ -51,6 +51,7 @@ module "aws_cia_lab_fsxn" {
   vpc_id              = module.aws_cia_lab_vpc.shared-vpc-id
   private_subnet_ids  = module.aws_cia_lab_vpc.shared-vpc-private-subnet-ids
   deployment_type     = var.deployment_type
+  kms_key_id          = module.aws_cia_lab_kms.kms-key-id
   storage_type        = var.storage_type
   storage_capacity    = var.storage_capacity
   throughput_capacity = var.throughput_capacity
@@ -107,6 +108,7 @@ module "aws_cia_lab_ec2" {
   instance_type        = var.instance_type
   root_vol_size        = var.root_vol_size
   root_vol_type        = var.root_vol_type
+  kms_key_id           = module.aws_cia_lab_kms.kms-key-id
   USER_DATA            = var.USER_DATA
   instance_sec_grp_ids = [module.aws_cia_lab_security_grp.ec2-sg-ids]
   ec2_subnet_ids       = module.aws_cia_lab_vpc.lamp-app-vpc-private-subnet-ids
@@ -116,4 +118,34 @@ module "aws_cia_lab_security_grp" {
   vpc_id    = module.aws_cia_lab_vpc.lamp-app-vpc-id
   alb_ports = var.alb_ports
   ec2_ports = var.ec2_ports
+  rds_ports = var.rds_ports
+}
+
+module "aws_cia_lab_postgresql" {
+  source                                = "./postgresql"
+  db_subnet_group_name                  = var.db_subnet_group_name
+  db_subnet_ids                         = module.aws_cia_lab_vpc.lamp-app-vpc-database-subnet-ids
+  db_sec_grp_ids                        = [module.aws_cia_lab_security_grp.db-sg-ids]
+  db_instance_class                     = var.db_instance_class
+  db_engine                             = var.db_engine
+  db_engine_version                     = var.db_engine_version
+  db_name                               = var.db_name
+  kms_key_id                            = module.aws_cia_lab_kms.kms-key-id
+  db_storage_type                       = var.db_storage_type
+  db_allocated_storage                  = var.db_allocated_storage
+  max_allocated_storage                 = var.max_allocated_storage
+  maintenance_window                    = var.maintenance_window
+  db_backup_window                      = var.db_backup_window
+  db_backup_retention_period            = var.db_backup_retention_period
+  db_port                               = var.db_port
+  enable_skip_final_snapshot            = var.enable_skip_final_snapshot
+  is_public_access                      = var.is_public_access
+  enable_multi_az                       = var.enable_multi_az
+  db_username                           = var.db_username
+  db_secrets                            = module.aws_cia_lab_ssm.ssm_value
+  apply_immediately                     = var.apply_immediately
+  auto_minor_version_upgrade            = var.auto_minor_version_upgrade
+  performance_insights_enabled          = var.performance_insights_enabled
+  performance_insights_retention_period = var.performance_insights_retention_period
+  enabled_cloudwatch_logs_exports       = var.enabled_cloudwatch_logs_exports
 }

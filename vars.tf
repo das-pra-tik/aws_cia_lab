@@ -35,14 +35,16 @@ variable "lamp-app-subnets" {
   type = map(any)
   default = {
     a = {
-      lamp-app-public  = "10.20.1.0/24"
-      lamp-app-private = "10.20.101.0/24"
-      lamp-app-az      = "us-east-1a"
+      lamp-app-public   = "10.20.1.0/24"
+      lamp-app-private  = "10.20.101.0/24"
+      lamp-app-database = "10.20.201.0/24"
+      lamp-app-az       = "us-east-1a"
     }
     b = {
-      lamp-app-public  = "10.20.2.0/24"
-      lamp-app-private = "10.20.102.0/24"
-      lamp-app-az      = "us-east-1b"
+      lamp-app-public   = "10.20.2.0/24"
+      lamp-app-private  = "10.20.102.0/24"
+      lamp-app-database = "10.20.202.0/24"
+      lamp-app-az       = "us-east-1b"
     }
     # c = {
     #   lamp-app-public  = "10.20.3.0/24"
@@ -88,7 +90,7 @@ variable "kms_alias_name" {
 #-------------------------------------------------------------------------
 variable "ssm_prefix" {
   type    = list(string)
-  default = ["/prod/aws_cia_lab/domain_secret", "/prod/aws_cia_lab/fsxn_secret", "/prod/aws_cia_lab/svm_secret"]
+  default = ["/prod/aws_cia_lab/domain_secret", "/prod/aws_cia_lab/fsxn_secret", "/prod/aws_cia_lab/svm_secret", "/prod/aws_cia_lab/rds_secret"]
 }
 
 variable "ssm_type" {
@@ -393,4 +395,143 @@ variable "ec2_ports" {
       //security_groups = []
     }
   }
+}
+
+variable "rds_ports" {
+  type = map(any)
+  default = {
+    "5432" = {
+      description = "port for PostgreSQL"
+      port        = 5432
+      protocol    = "tcp"
+      //cidr_blocks = ["0.0.0.0/0"]
+      //security_groups = []
+    }
+  }
+}
+
+#------------------------------------------------------------------------
+variable "db_subnet_group_name" {
+  type    = string
+  default = "aws-cia-lab-subnet-grp"
+}
+
+variable "db_instance_class" {
+  description = "The instance class to use for RDS."
+  type        = string
+  default     = "db.t3.micro"
+}
+
+variable "db_engine" {
+  description = "The name of the database engine to be used for RDS."
+  type        = string
+  default     = "postgres"
+}
+
+variable "db_engine_version" {
+  description = "The database engine version."
+  type        = string
+  default     = "14.5"
+}
+
+variable "db_name" {
+  description = "Name for the created database."
+  type        = string
+  default     = "aws-cia-lab-postgresql"
+}
+
+variable "db_storage_type" {
+  description = "Storage Type for RDS."
+  type        = string
+  default     = "gp3"
+}
+
+variable "db_allocated_storage" {
+  description = "Storage size in GB."
+  type        = number
+  default     = 20
+}
+
+variable "max_allocated_storage" {
+  description = "Max allocate storage"
+  type        = number
+  default     = 40
+}
+
+variable "maintenance_window" {
+  description = "Maintenance window"
+  type        = string
+  default     = "sun:00:30-sun:01:30"
+}
+
+variable "db_backup_window" {
+  description = "Preferred backup window."
+  type        = string
+  default     = "00:00-00:30"
+}
+
+variable "db_backup_retention_period" {
+  description = "Backup retention period in days."
+  type        = number
+  default     = 0
+}
+
+variable "db_port" {
+  description = "The port on which the database accepts connections."
+  type        = string
+  default     = "5432"
+}
+
+variable "enable_skip_final_snapshot" {
+  description = "When DB is deleted and if this variable is false, no final snapshot will be made."
+  type        = bool
+  default     = false
+}
+
+variable "is_public_access" {
+  description = "Enable public access for RDS"
+  type        = bool
+  default     = false
+}
+
+variable "enable_multi_az" {
+  description = "Create RDS instance in multiple availability zones."
+  type        = bool
+  default     = true
+}
+
+variable "db_username" {
+  description = "Database username"
+  type        = string
+  default     = "admin"
+}
+
+variable "apply_immediately" {
+  description = "Apply immediately, do not set this to true for production"
+  type        = bool
+  default     = false
+}
+
+variable "auto_minor_version_upgrade" {
+  default     = true
+  type        = bool
+  description = "Indicates that minor engine upgrades will be applied automatically to the DB instance during the maintenance window"
+}
+
+variable "performance_insights_enabled" {
+  default     = false
+  type        = bool
+  description = "Specifies whether Performance Insights are enabled."
+}
+
+variable "performance_insights_retention_period" {
+  default     = 7
+  type        = number
+  description = "The amount of time in days to retain Performance Insights data. Either 7 (7 days) or 731 (2 years)."
+}
+
+variable "enabled_cloudwatch_logs_exports" {
+  default     = true
+  type        = bool
+  description = "Indicates that postgresql logs will be configured to be sent automatically to Cloudwatch"
 }

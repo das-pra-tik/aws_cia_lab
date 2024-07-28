@@ -11,7 +11,7 @@ resource "random_password" "random_secrets" {
 
 locals {
   ssm_secrets = {
-    domain_secrets = {
+    domain_secret = {
       name        = var.ssm_prefix[0]
       type        = var.ssm_type
       description = "Domain Authentication Password Secrets"
@@ -19,7 +19,7 @@ locals {
       overwrite = false
       tier      = var.ssm_tier
     }
-    fsxn_secrets = {
+    fsxn_secret = {
       name        = var.ssm_prefix[1]
       type        = var.ssm_type
       description = "fsxn Password Secrets"
@@ -27,10 +27,18 @@ locals {
       overwrite = false
       tier      = var.ssm_tier
     }
-    svm_secrets = {
+    svm_secret = {
       name        = var.ssm_prefix[2]
       type        = var.ssm_type
       description = "svm Password Secrets"
+      //key_id      = var.kms_key_id
+      overwrite = false
+      tier      = var.ssm_tier
+    }
+    rds_secret = {
+      name        = var.ssm_prefix[3]
+      type        = var.ssm_type
+      description = "PostgreSQL RDS Password Secrets"
       //key_id      = var.kms_key_id
       overwrite = false
       tier      = var.ssm_tier

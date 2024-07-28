@@ -9,15 +9,6 @@ variable "lamp-app-vpc-id" {
 variable "shared-vpc-id" {
   type = string
 }
-/*
-variable "lamp-app-vpc-public-subnet-ids" {
-  type = list(string)
-}
-
-variable "shared-vpc-public-subnet-ids" {
-  type = list(string)
-}
-*/
 variable "lamp-app-vpc-private-subnet-ids" {
   type = list(string)
 }
@@ -33,3 +24,13 @@ variable "lamp-app-vpc-cidr" {
 variable "shared-vpc-cidr" {
   type = string
 }
+
+/*
+variable "lamp-app-vpc-public-subnet-ids" {
+  type = list(string)
+}
+
+variable "shared-vpc-public-subnet-ids" {
+  type = list(string)
+}
+*/

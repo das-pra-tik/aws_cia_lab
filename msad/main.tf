@@ -1,9 +1,3 @@
-/*
-data "aws_ssm_parameter" "ad-pwd" {
-  name = var.ssm_param_name
-}
-*/
-
 locals {
   internal_dns_zone = "cia-lab.local"
   ad_domain         = "cia-lab.aws"
@@ -22,6 +16,7 @@ resource "aws_directory_service_directory" "cia-lab-msad" {
   }
 }
 
+/*
 resource "aws_route53_zone" "vpc" {
   name = local.internal_dns_zone
 
@@ -30,7 +25,7 @@ resource "aws_route53_zone" "vpc" {
   }
 }
 
-/*
+
 resource "aws_route53_resolver_endpoint" "ad_hcm_resolver" {
   direction          = "OUTBOUND"
   security_group_ids = var.r53_resolver_endpoint_sg_ids

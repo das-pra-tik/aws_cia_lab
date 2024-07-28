@@ -25,6 +25,10 @@ output "lamp-app-vpc-private-subnet-ids" {
 output "lamp-app-vpc-public-subnet-ids" {
   value = [for s in aws_subnet.lamp-app-public : s.id]
 }
+
+output "lamp-app-vpc-database-subnet-ids" {
+  value = [for s in aws_subnet.lamp-app-database : s.id]
+}
 /*
 output "shared-vpc-private-subnet-cidrs" {
   value = [for s in aws_subnet.shared-vpc-private : s.cidr_block]

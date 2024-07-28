@@ -46,6 +46,19 @@ resource "aws_subnet" "lamp-app-private" {
   }
 }
 
+resource "aws_subnet" "lamp-app-database" {
+  depends_on              = [aws_vpc.lamp-app-vpc]
+  for_each                = var.lamp-app-subnets
+  vpc_id                  = aws_vpc.lamp-app-vpc.id
+  cidr_block              = each.value.lamp-app-database
+  availability_zone       = each.value.lamp-app-az
+  map_public_ip_on_launch = false
+  tags = {
+    Name = "lamp-app-PrivateSubnet"
+    Tier = "lamp-app-Private"
+  }
+}
+
 resource "aws_route_table" "lamp-app-public-rt" {
   depends_on = [aws_subnet.lamp-app-public]
   vpc_id     = aws_vpc.lamp-app-vpc.id
@@ -86,6 +99,26 @@ resource "aws_route_table_association" "private-rt-association" {
   route_table_id = aws_route_table.lamp-app-private-rt.id
 }
 
+resource "aws_route_table" "lamp-app-database-rt" {
+  depends_on = [aws_subnet.lamp-app-database, var.tgw-id]
+  vpc_id     = aws_vpc.lamp-app-vpc.id
+
+  route {
+    cidr_block         = var.shared-vpc-cidr
+    transit_gateway_id = var.tgw-id
+  }
+
+  tags = {
+    Name = "lamp-app-DatabaseRT"
+  }
+}
+
+resource "aws_route_table_association" "database-rt-association" {
+  depends_on     = [aws_subnet.lamp-app-database, aws_route_table.lamp-app-database-rt]
+  for_each       = var.lamp-app-subnets
+  subnet_id      = aws_subnet.lamp-app-database[each.key].id
+  route_table_id = aws_route_table.lamp-app-database-rt.id
+}
 # ------------------------------------------------------------------------------
 # Create non-default VPC for Lamp-Stack App
 resource "aws_vpc" "shared-vpc" {

@@ -1,8 +1,7 @@
-/*
 variable "kms_key_id" {
   type = string
 }
-*/
+
 variable "ssm_prefix" {
   type = list(string)
 }

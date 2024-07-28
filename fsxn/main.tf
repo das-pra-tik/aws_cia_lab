@@ -7,7 +7,7 @@ resource "aws_fsx_ontap_file_system" "cia_lab_FsxnFs" {
   storage_type        = var.storage_type
   storage_capacity    = var.storage_capacity
   throughput_capacity = var.throughput_capacity
-  //kms_key_id          = var.kms_key
+  kms_key_id          = var.kms_key_id
 
   fsx_admin_password = var.fsx_admin_password
 

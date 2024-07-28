@@ -62,7 +62,7 @@ resource "aws_instance" "target_nodes" {
     volume_type           = var.root_vol_type
     delete_on_termination = "true"
     encrypted             = "true"
-    //kms_key_id          = var.kms_key_id
+    kms_key_id            = var.kms_key_id
   }
 }
 
@@ -74,8 +74,8 @@ resource "aws_ebs_volume" "ebs-vol01" {
   size              = 15
   type              = "gp3"
   encrypted         = "true"
-  //kms_key_id = var.kms_key_id
-  final_snapshot = false
+  kms_key_id        = var.kms_key_id
+  final_snapshot    = false
 }
 
 resource "aws_ebs_volume" "ebs-vol02" {
@@ -85,8 +85,8 @@ resource "aws_ebs_volume" "ebs-vol02" {
   size              = 10
   type              = "gp3"
   encrypted         = "true"
-  //kms_key_id = var.kms_key_id
-  final_snapshot = false
+  kms_key_id        = var.kms_key_id
+  final_snapshot    = false
 }
 
 # Attach EBS Volumes to EC2 instances we created earlier

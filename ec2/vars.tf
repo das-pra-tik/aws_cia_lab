@@ -7,4 +7,4 @@ variable "instance_sec_grp_ids" { type = list(string) }
 variable "ec2_subnet_ids" { type = list(string) }
 variable "root_vol_size" { type = number }
 variable "root_vol_type" { type = string }
-//variable "kms_key_id" { type = string }
+variable "kms_key_id" { type = string }

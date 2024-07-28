@@ -21,11 +21,11 @@ variable "storage_capacity" {
 variable "throughput_capacity" {
   type = number
 }
-/*
-variable "kms_key" {
+
+variable "kms_key_id" {
   type = string
 }
-*/
+
 variable "fsx_admin_password" {
   type = string
 }
