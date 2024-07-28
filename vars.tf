@@ -306,15 +306,91 @@ variable "fsxn_egress_rules" {
 #----------------------------------------------------------------------------------
 variable "s3_bucket_name" {
   type    = string
-  default = "www.devops-terraform.click"
+  default = "cdn.devops-terraform.click"
 }
-
 variable "domain_name" {
   type    = string
   default = "devops-terraform.click"
 }
-
-variable "alt_domain_name" {
+variable "alt_domain_name_1" {
   type    = string
-  default = "www.devops-terraform.click"
+  default = "cdn.devops-terraform.click"
+}
+variable "alt_domain_name_2" {
+  type    = string
+  default = "alb.devops-terraform.click"
+}
+variable "alb_name" {
+  type    = string
+  default = "aws-cia-lab-lb"
+}
+variable "alb_tg_name" {
+  type    = string
+  default = "aws-cia-lab-tg"
+}
+
+variable "algorithm" {
+  type    = string
+  default = "RSA"
+}
+variable "rsa_bits" {
+  type    = number
+  default = 4096
+}
+variable "key_pair_name" {
+  type    = string
+  default = "aws_cia_lab"
+}
+variable "instance_type" {
+  type    = string
+  default = "t3.medium"
+}
+variable "root_vol_type" {
+  type    = string
+  default = "gp3"
+}
+variable "root_vol_size" {
+  type    = number
+  default = 20
+}
+variable "USER_DATA" {
+  type    = string
+  default = "USER_DATA.sh"
+}
+variable "alb_ports" {
+  type = map(any)
+  default = {
+    "80" = {
+      description = "HTTP"
+      port        = 80
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+    "443" = {
+      description = "HTTPS"
+      port        = 443
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+}
+
+variable "ec2_ports" {
+  type = map(any)
+  default = {
+    "80" = {
+      description = "HTTP"
+      port        = 80
+      protocol    = "tcp"
+      //cidr_blocks = ["0.0.0.0/0"]
+      //security_groups = []
+    }
+    "443" = {
+      description = "HTTPS"
+      port        = 443
+      protocol    = "tcp"
+      //cidr_blocks = ["0.0.0.0/0"]
+      //security_groups = []
+    }
+  }
 }

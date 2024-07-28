@@ -2,7 +2,7 @@
 resource "aws_acm_certificate" "domain_cert" {
   domain_name               = var.domain_name
   validation_method         = "DNS"
-  subject_alternative_names = [var.alt_domain_name]
+  subject_alternative_names = [var.alt_domain_name_1, var.alt_domain_name_2]
 
   lifecycle {
     create_before_destroy = true

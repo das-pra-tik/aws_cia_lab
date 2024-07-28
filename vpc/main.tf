@@ -1,3 +1,5 @@
+data "aws_availability_zones" "available_azs" { state = "available" }
+
 # Create non-default VPC for Lamp-Stack App
 resource "aws_vpc" "lamp-app-vpc" {
   cidr_block           = lookup(var.vpc-map, "lamp-app-vpc")

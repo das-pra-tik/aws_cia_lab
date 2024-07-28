@@ -22,15 +22,32 @@ resource "aws_route53_record" "r53_record_dvo" {
   ttl             = 60
 }
 
-# AWS Route53 record resource for the "www" subdomain. The record uses an "A" type record and an alias to the AWS CloudFront distribution with the specified domain name and hosted zone ID.
-resource "aws_route53_record" "www" {
+# AWS Route53 record resource for the "cdn" and "alb" subdomains. The record uses an "A" type record and an alias to the AWS CloudFront distribution and ALB with the specified domain name and hosted zone ID.
+# -----------------------------------------------------------------------------
+# CREATE RECORD TYPE AS "A" IN ROUTE 53 POINTING AT THE CLOUDFRONT DISTRIBUTION
+# -----------------------------------------------------------------------------
+resource "aws_route53_record" "cdn" {
   zone_id = data.aws_route53_zone.r53_public_hosted_zone.id
-  name    = "www.${var.domain_name}"
+  name    = "cdn.${var.domain_name}"
   type    = "A"
 
   alias {
     name                   = var.r53_cdn_domain_name
     zone_id                = var.r53_cdn_hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
+# --------------------------------------------------------------------
+# CREATE RECORD TYPE AS "A" IN ROUTE 53 POINTING AT THE LOAD BALANCER
+# --------------------------------------------------------------------
+resource "aws_route53_record" "alb" {
+  zone_id = data.aws_route53_zone.r53_public_hosted_zone.id
+  name    = "alb.${var.domain_name}"
+  type    = "A"
+  alias {
+    name                   = var.r53_alb_domain_name
+    zone_id                = var.r53_alb_hosted_zone_id
     evaluate_target_health = false
   }
 }

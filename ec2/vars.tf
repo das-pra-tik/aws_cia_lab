@@ -1,0 +1,10 @@
+variable "instance_type" { type = string }
+variable "rsa_bits" { type = number }
+variable "key_pair_name" { type = string }
+variable "algorithm" { type = string }
+variable "USER_DATA" { type = string }
+variable "instance_sec_grp_ids" { type = list(string) }
+variable "ec2_subnet_ids" { type = list(string) }
+variable "root_vol_size" { type = number }
+variable "root_vol_type" { type = string }
+//variable "kms_key_id" { type = string }

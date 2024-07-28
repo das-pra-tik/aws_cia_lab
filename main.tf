@@ -72,7 +72,7 @@ module "aws_cia_lab_s3_website" {
 
 module "aws_cia_lab_cdn" {
   source          = "./cdn"
-  alt_domain_name = var.alt_domain_name
+  alt_domain_name = var.alt_domain_name_1
   domain_name     = module.aws_cia_lab_s3_website.s3_bucket_regional_domain_name
   acm_cert_arn    = module.aws_cia_lab_acm_r53.acm_certificate_arn
 }
@@ -80,7 +80,40 @@ module "aws_cia_lab_cdn" {
 module "aws_cia_lab_acm_r53" {
   source                 = "./acm_r53"
   domain_name            = var.domain_name
-  alt_domain_name        = var.alt_domain_name
+  alt_domain_name_1      = var.alt_domain_name_1
+  alt_domain_name_2      = var.alt_domain_name_2
   r53_cdn_hosted_zone_id = module.aws_cia_lab_cdn.cdn_hosted_zone_id
   r53_cdn_domain_name    = module.aws_cia_lab_cdn.cdn_domain_name
+  r53_alb_hosted_zone_id = module.aws_cia_lab_alb.alb_zone_id
+  r53_alb_domain_name    = module.aws_cia_lab_alb.alb_dns_endpoint
+}
+module "aws_cia_lab_alb" {
+  source             = "./alb"
+  vpc_id             = module.aws_cia_lab_vpc.lamp-app-vpc-id
+  alb_public_subnets = module.aws_cia_lab_vpc.lamp-app-vpc-public-subnet-ids
+  alb_name           = var.alb_name
+  alb_tg_name        = var.alb_tg_name
+  domain_name        = var.domain_name
+  alb_target_ids     = module.aws_cia_lab_ec2.instance-ids
+  alb_sec_groups     = [module.aws_cia_lab_security_grp.alb-sg-ids]
+  acm_cert_arn       = module.aws_cia_lab_acm_r53.acm_certificate_arn
+}
+
+module "aws_cia_lab_ec2" {
+  source               = "./ec2"
+  algorithm            = var.algorithm
+  rsa_bits             = var.rsa_bits
+  key_pair_name        = var.key_pair_name
+  instance_type        = var.instance_type
+  root_vol_size        = var.root_vol_size
+  root_vol_type        = var.root_vol_type
+  USER_DATA            = var.USER_DATA
+  instance_sec_grp_ids = [module.aws_cia_lab_security_grp.ec2-sg-ids]
+  ec2_subnet_ids       = module.aws_cia_lab_vpc.lamp-app-vpc-private-subnet-ids
+}
+module "aws_cia_lab_security_grp" {
+  source    = "./security_grp"
+  vpc_id    = module.aws_cia_lab_vpc.lamp-app-vpc-id
+  alb_ports = var.alb_ports
+  ec2_ports = var.ec2_ports
 }
