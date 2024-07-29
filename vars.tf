@@ -15,49 +15,39 @@ variable "shared-vpc-subnets" {
   type = map(any)
   default = {
     a = {
-      shared-vpc-public  = "10.40.1.0/24"
-      shared-vpc-private = "10.40.101.0/24"
+      shared-vpc-public  = "10.0.1.0/24"
+      shared-vpc-private = "10.0.101.0/24"
       shared-vpc-az      = "us-east-1a"
     }
     b = {
-      shared-vpc-public  = "10.40.2.0/24"
-      shared-vpc-private = "10.40.102.0/24"
+      shared-vpc-public  = "10.0.2.0/24"
+      shared-vpc-private = "10.0.102.0/24"
       shared-vpc-az      = "us-east-1b"
     }
-    # c = {
-    #   shared-vpc-public  = "10.40.3.0/24"
-    #   shared-vpc-private = "10.40.103.0/24"
-    #   shared-vpc-az      = "us-east-2c"
-    # }
   }
 }
 variable "lamp-app-subnets" {
   type = map(any)
   default = {
     a = {
-      lamp-app-public   = "10.20.1.0/24"
-      lamp-app-private  = "10.20.101.0/24"
-      lamp-app-database = "10.20.201.0/24"
+      lamp-app-public   = "10.1.1.0/24"
+      lamp-app-private  = "10.1.101.0/24"
+      lamp-app-database = "10.1.201.0/24"
       lamp-app-az       = "us-east-1a"
     }
     b = {
-      lamp-app-public   = "10.20.2.0/24"
-      lamp-app-private  = "10.20.102.0/24"
-      lamp-app-database = "10.20.202.0/24"
+      lamp-app-public   = "10.1.2.0/24"
+      lamp-app-private  = "10.1.102.0/24"
+      lamp-app-database = "10.1.202.0/24"
       lamp-app-az       = "us-east-1b"
     }
-    # c = {
-    #   lamp-app-public  = "10.20.3.0/24"
-    #   lamp-app-private = "10.20.103.0/24"
-    #   lamp-app-az      = "us-east-2c"
-    # }
   }
 }
 variable "vpc-map" {
   type = map(string)
   default = {
-    lamp-app-vpc = "10.20.0.0/16"
-    shared-vpc   = "10.40.0.0/16"
+    lamp-app-vpc = "10.1.0.0/16"
+    shared-vpc   = "10.0.0.0/16"
   }
 }
 
@@ -437,7 +427,7 @@ variable "db_engine_version" {
 variable "db_name" {
   description = "Name for the created database."
   type        = string
-  default     = "awscialabpostgresql077"
+  default     = "awscialabpostgresql5432"
 }
 
 variable "db_storage_type" {
