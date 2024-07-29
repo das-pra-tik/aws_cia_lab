@@ -4,7 +4,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">=4.30.0"
+      version = "5.60.0"
     }
     random = {
       source  = "hashicorp/random"
@@ -12,13 +12,13 @@ terraform {
     }
     tls = {
       source  = "hashicorp/tls"
-      version = ">=3.1.0"
+      version = "4.0.5"
     }
   }
 
   backend "s3" {
     bucket  = "374278-terraform-tfstate"
-    key     = "dev/dynamicblock-complexmap.tfstate"
+    key     = "prod/aws-cia-lab.tfstate"
     encrypt = "true"
     region  = "us-east-1"
     profile = "tf-admin"
