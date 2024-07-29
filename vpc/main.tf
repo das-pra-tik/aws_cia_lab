@@ -120,7 +120,7 @@ resource "aws_route_table_association" "database-rt-association" {
   route_table_id = aws_route_table.lamp-app-database-rt.id
 }
 # ------------------------------------------------------------------------------
-# Create non-default VPC for Lamp-Stack App
+# Create non-default VPC for Shared-Services
 resource "aws_vpc" "shared-vpc" {
   cidr_block           = lookup(var.vpc-map, "shared-vpc")
   enable_dns_hostnames = true
