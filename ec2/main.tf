@@ -47,6 +47,7 @@ resource "aws_instance" "target_nodes" {
   associate_public_ip_address = false
   disable_api_termination     = false
   user_data                   = file(var.USER_DATA)
+  iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
   monitoring                  = true
   source_dest_check           = true
   lifecycle {

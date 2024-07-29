@@ -6,3 +6,4 @@ variable "alb_name" { type = string }
 variable "alb_tg_name" { type = string }
 variable "acm_cert_arn" { type = string }
 variable "domain_name" { type = string }
+variable "s3_access_logs_bucket" { type = string }

@@ -431,13 +431,13 @@ variable "db_engine" {
 variable "db_engine_version" {
   description = "The database engine version."
   type        = string
-  default     = "14.5"
+  default     = "12"
 }
 
 variable "db_name" {
   description = "Name for the created database."
   type        = string
-  default     = "aws-cia-lab-postgresql"
+  default     = "awscialabpostgresql077"
 }
 
 variable "db_storage_type" {
@@ -485,7 +485,7 @@ variable "db_port" {
 variable "enable_skip_final_snapshot" {
   description = "When DB is deleted and if this variable is false, no final snapshot will be made."
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "is_public_access" {
@@ -503,7 +503,7 @@ variable "enable_multi_az" {
 variable "db_username" {
   description = "Database username"
   type        = string
-  default     = "admin"
+  default     = "db_user"
 }
 
 variable "apply_immediately" {
@@ -534,4 +534,19 @@ variable "enabled_cloudwatch_logs_exports" {
   default     = true
   type        = bool
   description = "Indicates that postgresql logs will be configured to be sent automatically to Cloudwatch"
+}
+
+variable "s3_access_logs_bucket" {
+  type    = string
+  default = "aws-cia-lab-s3-access-logs-bucket"
+}
+
+variable "default_retention_noncurrent_days" {
+  type    = number
+  default = 180
+}
+
+variable "archive_retention_noncurrent_days" {
+  type    = number
+  default = 90
 }

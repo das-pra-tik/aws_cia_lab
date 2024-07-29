@@ -33,10 +33,9 @@ module "aws_cia_lab_kms" {
 module "aws_cia_lab_ssm" {
   source     = "./ssm"
   ssm_prefix = var.ssm_prefix
-  //ssm_value  = var.ssm_value
   ssm_type   = var.ssm_type
   ssm_tier   = var.ssm_tier
-  kms_key_id = module.aws_cia_lab_kms.kms-key-id
+  kms_key_id = module.aws_cia_lab_kms.kms-key-arn
 }
 
 module "aws_cia_lab_msad" {
@@ -51,7 +50,7 @@ module "aws_cia_lab_fsxn" {
   vpc_id              = module.aws_cia_lab_vpc.shared-vpc-id
   private_subnet_ids  = module.aws_cia_lab_vpc.shared-vpc-private-subnet-ids
   deployment_type     = var.deployment_type
-  kms_key_id          = module.aws_cia_lab_kms.kms-key-id
+  kms_key_id          = module.aws_cia_lab_kms.kms-key-arn
   storage_type        = var.storage_type
   storage_capacity    = var.storage_capacity
   throughput_capacity = var.throughput_capacity
@@ -89,15 +88,16 @@ module "aws_cia_lab_acm_r53" {
   r53_alb_domain_name    = module.aws_cia_lab_alb.alb_dns_endpoint
 }
 module "aws_cia_lab_alb" {
-  source             = "./alb"
-  vpc_id             = module.aws_cia_lab_vpc.lamp-app-vpc-id
-  alb_public_subnets = module.aws_cia_lab_vpc.lamp-app-vpc-public-subnet-ids
-  alb_name           = var.alb_name
-  alb_tg_name        = var.alb_tg_name
-  domain_name        = var.domain_name
-  alb_target_ids     = module.aws_cia_lab_ec2.instance-ids
-  alb_sec_groups     = [module.aws_cia_lab_security_grp.alb-sg-ids]
-  acm_cert_arn       = module.aws_cia_lab_acm_r53.acm_certificate_arn
+  source                = "./alb"
+  vpc_id                = module.aws_cia_lab_vpc.lamp-app-vpc-id
+  alb_public_subnets    = module.aws_cia_lab_vpc.lamp-app-vpc-public-subnet-ids
+  alb_name              = var.alb_name
+  s3_access_logs_bucket = module.aws_cia_lab_s3_access_logs.s3_access_logs_bucket_name
+  alb_tg_name           = var.alb_tg_name
+  domain_name           = var.domain_name
+  alb_target_ids        = module.aws_cia_lab_ec2.instance-ids
+  alb_sec_groups        = [module.aws_cia_lab_security_grp.alb-sg-ids]
+  acm_cert_arn          = module.aws_cia_lab_acm_r53.acm_certificate_arn
 }
 
 module "aws_cia_lab_ec2" {
@@ -108,7 +108,7 @@ module "aws_cia_lab_ec2" {
   instance_type        = var.instance_type
   root_vol_size        = var.root_vol_size
   root_vol_type        = var.root_vol_type
-  kms_key_id           = module.aws_cia_lab_kms.kms-key-id
+  kms_key_id           = module.aws_cia_lab_kms.kms-key-arn
   USER_DATA            = var.USER_DATA
   instance_sec_grp_ids = [module.aws_cia_lab_security_grp.ec2-sg-ids]
   ec2_subnet_ids       = module.aws_cia_lab_vpc.lamp-app-vpc-private-subnet-ids
@@ -130,7 +130,7 @@ module "aws_cia_lab_postgresql" {
   db_engine                             = var.db_engine
   db_engine_version                     = var.db_engine_version
   db_name                               = var.db_name
-  kms_key_id                            = module.aws_cia_lab_kms.kms-key-id
+  kms_key_id                            = module.aws_cia_lab_kms.kms-key-arn
   db_storage_type                       = var.db_storage_type
   db_allocated_storage                  = var.db_allocated_storage
   max_allocated_storage                 = var.max_allocated_storage
@@ -148,4 +148,12 @@ module "aws_cia_lab_postgresql" {
   performance_insights_enabled          = var.performance_insights_enabled
   performance_insights_retention_period = var.performance_insights_retention_period
   enabled_cloudwatch_logs_exports       = var.enabled_cloudwatch_logs_exports
+}
+
+module "aws_cia_lab_s3_access_logs" {
+  source                            = "./s3_access_logs"
+  kms_key_id                        = module.aws_cia_lab_kms.kms-key-arn
+  s3_access_logs_bucket             = var.s3_access_logs_bucket
+  default_retention_noncurrent_days = var.default_retention_noncurrent_days
+  archive_retention_noncurrent_days = var.archive_retention_noncurrent_days
 }

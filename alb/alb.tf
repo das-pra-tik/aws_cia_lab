@@ -12,6 +12,12 @@ resource "aws_alb" "aws_cia_alb" {
   enable_deletion_protection       = "false"
   enable_http2                     = "true"
   idle_timeout                     = 400
+
+  access_logs {
+    bucket = var.s3_access_logs_bucket
+    prefix = "ELB-logs"
+  }
+
 }
 
 ####################################################
