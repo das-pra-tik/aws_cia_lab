@@ -349,6 +349,38 @@ variable "USER_DATA" {
   type    = string
   default = "USER_DATA.sh"
 }
+variable "lt_name" {
+  type    = string
+  default = "aws_cia_lab_lt"
+}
+variable "iops" {
+  type    = number
+  default = 3000
+}
+variable "throughput" {
+  type    = number
+  default = 125
+}
+variable "data_vol_size" {
+  type    = number
+  default = 15
+}
+variable "min_size" {
+  type    = number
+  default = 2
+}
+variable "max_size" {
+  type    = number
+  default = 4
+}
+variable "desired_size" {
+  type    = number
+  default = 2
+}
+variable "asg_health_check_type" {
+  type    = string
+  default = "ELB"
+}
 variable "alb_ports" {
   type = map(any)
   default = {

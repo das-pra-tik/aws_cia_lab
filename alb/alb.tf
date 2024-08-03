@@ -17,7 +17,6 @@ resource "aws_alb" "aws_cia_alb" {
     bucket = var.s3_access_logs_bucket
     prefix = "ELB-logs"
   }
-
 }
 
 ####################################################
@@ -98,10 +97,16 @@ resource "aws_alb_listener_rule" "alb_listener_rule" {
 ####################################################
 # Target Group Attachment with Instance
 ####################################################
+/*
 resource "aws_alb_target_group_attachment" "alb-tg-attachment" {
   depends_on       = [var.alb_target_ids, aws_alb_target_group.aws_cia_alb_tg]
   count            = length(var.alb_target_ids)
   target_group_arn = aws_alb_target_group.aws_cia_alb_tg.arn
   target_id        = element(tolist(var.alb_target_ids), count.index)
+}
+*/
+resource "aws_autoscaling_attachment" "asg_tg_attachment" {
+  autoscaling_group_name = var.asg_name
+  lb_target_group_arn    = aws_alb_target_group.aws_cia_alb_tg.arn
 }
 

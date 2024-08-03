@@ -5,6 +5,10 @@ resource "random_password" "random_secrets" {
   special          = true
   min_special      = 5
   override_special = "!#$%^&*()/@-_=+[]{}<>:?"
+  numeric          = true
+  min_numeric      = 3
+  min_lower        = 3
+  min_upper        = 3
 }
 
 locals {

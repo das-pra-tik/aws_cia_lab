@@ -95,24 +95,35 @@ module "aws_cia_lab_alb" {
   s3_access_logs_bucket = module.aws_cia_lab_s3_access_logs.s3_access_logs_bucket_name
   alb_tg_name           = var.alb_tg_name
   domain_name           = var.domain_name
-  alb_target_ids        = module.aws_cia_lab_ec2.instance-ids
-  alb_sec_groups        = [module.aws_cia_lab_security_grp.alb-sg-ids]
-  acm_cert_arn          = module.aws_cia_lab_acm_r53.acm_certificate_arn
+  //alb_target_ids        = module.aws_cia_lab_ec2.instance-ids
+  alb_sec_groups = [module.aws_cia_lab_security_grp.alb-sg-ids]
+  acm_cert_arn   = module.aws_cia_lab_acm_r53.acm_certificate_arn
+  asg_name       = module.aws_cia_lab_ec2.asg_name
 }
 
 module "aws_cia_lab_ec2" {
-  source               = "./ec2"
-  algorithm            = var.algorithm
-  rsa_bits             = var.rsa_bits
-  key_pair_name        = var.key_pair_name
-  instance_type        = var.instance_type
-  root_vol_size        = var.root_vol_size
-  root_vol_type        = var.root_vol_type
-  kms_key_id           = module.aws_cia_lab_kms.kms-key-arn
-  USER_DATA            = var.USER_DATA
-  instance_sec_grp_ids = [module.aws_cia_lab_security_grp.ec2-sg-ids]
-  ec2_subnet_ids       = module.aws_cia_lab_vpc.lamp-app-vpc-private-subnet-ids
+  source                = "./ec2"
+  algorithm             = var.algorithm
+  rsa_bits              = var.rsa_bits
+  key_pair_name         = var.key_pair_name
+  instance_type         = var.instance_type
+  root_vol_size         = var.root_vol_size
+  vol_type              = var.root_vol_type
+  kms_key_id            = module.aws_cia_lab_kms.kms-key-arn
+  USER_DATA             = var.USER_DATA
+  instance_sec_grp_ids  = [module.aws_cia_lab_security_grp.ec2-sg-ids]
+  ec2_subnet_ids        = module.aws_cia_lab_vpc.lamp-app-vpc-private-subnet-ids
+  lt_name               = var.lt_name
+  iops                  = var.iops
+  throughput            = var.throughput
+  data_vol_size         = var.data_vol_size
+  min_size              = var.min_size
+  max_size              = var.max_size
+  desired_size          = var.desired_size
+  asg_health_check_type = var.asg_health_check_type
+  alb_target_group_arns = [module.aws_cia_lab_alb.alb_tg_arn]
 }
+
 module "aws_cia_lab_security_grp" {
   source    = "./security_grp"
   vpc_id    = module.aws_cia_lab_vpc.lamp-app-vpc-id
