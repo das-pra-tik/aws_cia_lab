@@ -169,26 +169,7 @@ resource "aws_launch_template" "ec2_launch_templ" {
     create_before_destroy = "true"
   }
 }
-/*
-resource "aws_autoscaling_group" "sh_asg" {
-  # no of instances
-  desired_capacity = 1
-  max_size         = 1
-  min_size         = 1
 
-  # source
-  target_group_arns = [aws_lb_target_group.sh_alb_tg.arn]
-
-  vpc_zone_identifier = [ # use private subnet
-    aws_subnet.sh_subnet_2.id
-  ]
-
-  launch_template {
-    id      = aws_launch_template.sh_ec2_launch_templ.id
-    version = "$Latest"
-  }
-}
-*/
 # Create AWS Auto Scaling Group
 resource "aws_autoscaling_group" "aws-cia-lab-ASG" {
   depends_on                = [aws_launch_template.ec2_launch_templ]
