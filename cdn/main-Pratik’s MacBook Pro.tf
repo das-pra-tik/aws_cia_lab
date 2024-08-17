@@ -24,9 +24,11 @@ resource "aws_cloudfront_distribution" "cdn_static_website" {
     max_ttl                = 86400
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
-    allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = "cia-lab-s3-origin"
+
+    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = "cia-lab-s3-origin"
+
     forwarded_values {
       query_string = false
       cookies {
@@ -39,7 +41,7 @@ resource "aws_cloudfront_distribution" "cdn_static_website" {
 
   restrictions {
     geo_restriction {
-      locations        = ["IN", "US", "CA"]
+      locations        = ["IN", "US", "CA", "GB", "DE"]
       restriction_type = "whitelist"
     }
   }
