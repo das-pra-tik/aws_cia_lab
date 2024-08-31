@@ -22,6 +22,15 @@ resource "aws_s3_bucket_cors_configuration" "s3_cors" {
     allowed_origins = ["*"]
   }
 }
+
+resource "aws_s3_object" "provision_source_files" {
+  bucket   = var.s3_bucket_name
+  for_each = fileset("2136_kool_form_pack/", "**/*.*")
+  key      = each.value
+  source   = "2136_kool_form_pack/${each.value}"
+  etag     = filemd5("2136_kool_form_pack/${each.value}")
+}
+
 /*
 # Using null resource to push all the files in one time
 resource "null_resource" "upload-to-S3" {
@@ -29,7 +38,7 @@ resource "null_resource" "upload-to-S3" {
     command = "aws s3 sync ${path.module}/2136_kool_form_pack s3://${aws_s3_bucket.s3-web-hosting-bucket.id} --region us-east-1"
   }
 }
-*/
+
 module "template_files" {
   source   = "hashicorp/dir/template"
   base_dir = "2136_kool_form_pack"
@@ -44,7 +53,7 @@ resource "aws_s3_object" "objects" {
   content      = each.value.content
   etag         = each.value.digests.md5
 }
-
+*/
 # Block all public access
 resource "aws_s3_bucket_public_access_block" "s3_public_access_block" {
   bucket = aws_s3_bucket.s3-web-hosting-bucket.id
