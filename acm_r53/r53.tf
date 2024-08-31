@@ -51,7 +51,7 @@ resource "aws_route53_record" "alb" {
     evaluate_target_health = false
   }
 }
-
+/*
 # AWS Route53 record resource for the apex domain (root domain) with an "A" type record. The record uses an alias to the AWS CloudFront distribution with the specified domain name and hosted zone ID.
 resource "aws_route53_record" "apex" {
   zone_id = data.aws_route53_zone.r53_public_hosted_zone.id
@@ -64,3 +64,4 @@ resource "aws_route53_record" "apex" {
     evaluate_target_health = false
   }
 }
+*/

@@ -26,7 +26,7 @@ resource "aws_s3_bucket_cors_configuration" "s3_cors" {
 # Using null resource to push all the files in one time
 resource "null_resource" "upload-to-S3" {
   provisioner "local-exec" {
-    command = "aws s3 sync ${path.module}/2136_kool_form_pack s3://${aws_s3_bucket.s3-web-hosting-bucket.id} --profile tf-admin --region us-east-1"
+    command = "aws s3 sync ${path.module}/2136_kool_form_pack s3://${aws_s3_bucket.s3-web-hosting-bucket.id} --profile tf_user --region us-east-1"
   }
 }
 

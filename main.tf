@@ -102,17 +102,18 @@ module "aws_cia_lab_alb" {
 }
 
 module "aws_cia_lab_ec2" {
-  source                = "./ec2"
-  algorithm             = var.algorithm
-  rsa_bits              = var.rsa_bits
-  key_pair_name         = var.key_pair_name
-  instance_type         = var.instance_type
-  root_vol_size         = var.root_vol_size
-  vol_type              = var.root_vol_type
-  kms_key_id            = module.aws_cia_lab_kms.kms-key-arn
-  USER_DATA             = var.USER_DATA
-  instance_sec_grp_ids  = [module.aws_cia_lab_security_grp.ec2-sg-ids]
-  ec2_subnet_ids        = module.aws_cia_lab_vpc.lamp-app-vpc-private-subnet-ids
+  source               = "./ec2"
+  algorithm            = var.algorithm
+  rsa_bits             = var.rsa_bits
+  key_pair_name        = var.key_pair_name
+  instance_type        = var.instance_type
+  root_vol_size        = var.root_vol_size
+  vol_type             = var.root_vol_type
+  kms_key_id           = module.aws_cia_lab_kms.kms-key-arn
+  USER_DATA            = var.USER_DATA
+  instance_sec_grp_ids = [module.aws_cia_lab_security_grp.ec2-sg-ids]
+  # ec2_subnet_ids        = module.aws_cia_lab_vpc.lamp-app-vpc-private-subnet-ids
+  ec2_subnet_ids        = module.aws_cia_lab_vpc.lamp-app-vpc-public-subnet-ids
   lt_name               = var.lt_name
   iops                  = var.iops
   throughput            = var.throughput

@@ -8,12 +8,6 @@ resource "aws_cloudfront_distribution" "cdn_static_website" {
     domain_name              = var.domain_name
     origin_id                = "cia-lab-s3-origin"
     origin_access_control_id = aws_cloudfront_origin_access_control.cdn-oac.id
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "https-only"
-      origin_ssl_protocols   = ["TLSV1.2"]
-    }
   }
 
   aliases = [var.alt_domain_name]

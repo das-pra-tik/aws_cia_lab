@@ -108,12 +108,14 @@ resource "aws_launch_template" "ec2_launch_templ" {
   ebs_optimized           = false
   key_name                = var.key_pair_name
   disable_api_termination = false
+  update_default_version  = true
+
   iam_instance_profile {
     name = aws_iam_instance_profile.ec2_profile.name
   }
 
   network_interfaces {
-    associate_public_ip_address = false
+    associate_public_ip_address = true
     security_groups             = var.instance_sec_grp_ids
     delete_on_termination       = true
   }
@@ -185,6 +187,15 @@ resource "aws_autoscaling_group" "aws-cia-lab-ASG" {
   launch_template {
     id      = aws_launch_template.ec2_launch_templ.id
     version = aws_launch_template.ec2_launch_templ.latest_version #"$Latest"
+  }
+  # Instance Refresh
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      #instance_warmup = 300 # Default behavior is to use the Auto Scaling Group's health check grace period.
+      min_healthy_percentage = 50
+    }
+    triggers = [/*"launch_template",*/ "desired_capacity"] # You can add any argument from ASG here, if those has changes, ASG Instance Refresh will trigger
   }
   enabled_metrics = [
     "GroupMinSize",

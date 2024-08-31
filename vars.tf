@@ -1,6 +1,6 @@
 variable "aws_profile" {
   type    = string
-  default = "tf-admin"
+  default = "tf_user"
 }
 variable "aws_region" {
   type    = string

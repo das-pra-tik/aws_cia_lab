@@ -21,6 +21,6 @@ terraform {
     key     = "prod/aws-cia-lab.tfstate"
     encrypt = "true"
     region  = "us-east-1"
-    profile = "tf-admin"
+    profile = "tf_user"
   }
 }

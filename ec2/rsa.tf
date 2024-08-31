@@ -16,7 +16,7 @@ resource "aws_key_pair" "ssh_key_pair" {
   depends_on = [tls_private_key.ssh_private_key, local_file.pem-file]
   key_name   = var.key_pair_name
   public_key = tls_private_key.ssh_private_key.public_key_openssh
-
+  /*
   # when creating, save the private key to the local Terraform directory
   provisioner "local-exec" {
     when    = create
@@ -28,4 +28,5 @@ resource "aws_key_pair" "ssh_key_pair" {
     when    = destroy
     command = "rm -rf ${self.id}.pem"
   }
+*/
 }
