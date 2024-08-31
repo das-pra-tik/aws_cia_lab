@@ -1,3 +1,4 @@
+/*
 module "aws_cia_lab_vpc" {
   source             = "./vpc"
   vpc-map            = var.vpc-map
@@ -169,3 +170,4 @@ module "aws_cia_lab_s3_access_logs" {
   default_retention_noncurrent_days = var.default_retention_noncurrent_days
   archive_retention_noncurrent_days = var.archive_retention_noncurrent_days
 }
+*/
