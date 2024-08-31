@@ -22,12 +22,19 @@ resource "aws_s3_bucket_cors_configuration" "s3_cors" {
     allowed_origins = ["*"]
   }
 }
-
+/*
 # Using null resource to push all the files in one time
 resource "null_resource" "upload-to-S3" {
   provisioner "local-exec" {
     command = "aws s3 sync ${path.module}/2136_kool_form_pack s3://${aws_s3_bucket.s3-web-hosting-bucket.id} --region us-east-1"
   }
+}
+*/
+resource "aws_s3_object" "upload-to-S3" {
+  bucket   = var.s3_bucket_name
+  for_each = fileset("2136_kool_form_pack/", "*/*.*")
+  key      = each.value
+  source   = "2136_kool_form_pack/${each.value}"
 }
 
 # Block all public access
