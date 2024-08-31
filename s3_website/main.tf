@@ -30,11 +30,19 @@ resource "null_resource" "upload-to-S3" {
   }
 }
 */
-resource "aws_s3_object" "upload-to-S3" {
-  bucket   = var.s3_bucket_name
-  for_each = fileset("2136_kool_form_pack/", "*/*.*")
-  key      = each.value
-  source   = "2136_kool_form_pack/${each.value}"
+module "template_files" {
+  source   = "hashicorp/dir/template"
+  base_dir = "2136_kool_form_pack"
+}
+
+resource "aws_s3_object" "objects" {
+  for_each     = module.template_files.files
+  bucket       = var.s3_bucket_name
+  key          = each.key
+  content_type = each.value.content_type
+  source       = each.value.source_path
+  content      = each.value.content
+  etag         = each.value.digests.md5
 }
 
 # Block all public access
