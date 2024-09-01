@@ -23,7 +23,7 @@ resource "aws_s3_bucket_cors_configuration" "s3_cors" {
   }
 }
 
-resource "aws_s3_object" "provision_source_files" {
+resource "aws_s3_object" "upload-to-S3" {
   bucket   = var.s3_bucket_name
   for_each = fileset("2136_kool_form_pack/", "**/*.*")
   key      = each.value
