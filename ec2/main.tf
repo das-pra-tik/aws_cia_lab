@@ -159,7 +159,7 @@ resource "aws_launch_template" "ec2_launch_templ" {
     # Data volume
     device_name  = "/dev/xvdh"
     no_device    = "false"
-    virtual_name = "Data Volume 1"
+    virtual_name = "DataVolume1"
     ebs {
       kms_key_id            = var.kms_key_id
       encrypted             = "true"
@@ -174,7 +174,7 @@ resource "aws_launch_template" "ec2_launch_templ" {
     # Data volume
     device_name  = "/dev/xvdj"
     no_device    = "false"
-    virtual_name = "Data Volume 2"
+    virtual_name = "DataVolume2"
     ebs {
       kms_key_id            = var.kms_key_id
       encrypted             = "true"
