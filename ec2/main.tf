@@ -101,15 +101,36 @@ resource "aws_volume_attachment" "ebs-vol02-attachment" {
 
 # ASG with Launch template
 resource "aws_launch_template" "ec2_launch_templ" {
-  name                    = var.lt_name
-  image_id                = data.aws_ami.amzn_ami.id #specific for each region
-  instance_type           = var.instance_type
-  user_data               = filebase64(var.USER_DATA)
-  ebs_optimized           = false
-  key_name                = var.key_pair_name
-  disable_api_termination = false
-  update_default_version  = true
+  name                                 = var.lt_name
+  image_id                             = data.aws_ami.amzn_ami.id #specific for each region
+  instance_type                        = var.instance_type
+  user_data                            = filebase64(var.USER_DATA)
+  ebs_optimized                        = false
+  key_name                             = var.key_pair_name
+  disable_api_stop                     = false
+  disable_api_termination              = false
+  update_default_version               = true
+  instance_initiated_shutdown_behavior = "terminate"
 
+  capacity_reservation_specification {
+    capacity_reservation_preference = "open"
+  }
+
+  cpu_options {
+    core_count       = 4
+    threads_per_core = 2
+  }
+
+  credit_specification {
+    cpu_credits = "standard"
+  }
+
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 2
+    instance_metadata_tags      = "enabled"
+  }
   iam_instance_profile {
     name = aws_iam_instance_profile.ec2_profile.name
   }
