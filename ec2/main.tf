@@ -115,12 +115,12 @@ resource "aws_launch_template" "ec2_launch_templ" {
   capacity_reservation_specification {
     capacity_reservation_preference = "open"
   }
-
+  /*
   cpu_options {
     core_count       = 4
     threads_per_core = 2
   }
-
+*/
   credit_specification {
     cpu_credits = "standard"
   }
